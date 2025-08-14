@@ -1,10 +1,10 @@
 import express from "express";
 import { createTask, deleteTask, getAllTask, getByIdTask, updateTask } from "../controllers/task.controller.js";
 
-export const router = express.Router();
+export const routerTask = express.Router();
 
-POST /api/users, createTask;
-GET /api/users, deleteTask;
-GET /api/users/:id, getAllTask;
-PUT /api/users/:id, getByIdTask;
-DELETE /api/users/:id, updateTask;
+routerTask.post ("/api/tasks", createTask);
+routerTask.get ("/api/tasks", deleteTask);
+routerTask.get ("/api/tasks/:id", getAllTask);
+routerTask.put ("/api/tasks/:id", getByIdTask);
+routerTask.delete ("/api/tasks/:id", updateTask);
