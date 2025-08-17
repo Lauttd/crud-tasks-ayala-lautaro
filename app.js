@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { initDB } from "./src/config/database.js";
 import { routerTask } from "./src/routes/task.routes.js";
 import { routerUsers } from "./src/routes/users.routes.js";
-import { usersModel } from "./src/models/users.model.js";
+
 
 dotenv.config();
 
