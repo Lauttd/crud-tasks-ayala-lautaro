@@ -12,7 +12,9 @@ export const usersModel = sequelize.define("users", {
 });
 
 //relaciones 
-usersModel.hasMany(taskModel, {foreignKey: "user_id", as: "manyTasks"});
+usersModel.hasMany(taskModel, 
+    {foreignKey: "user_id", as: "manyTasks"});
 
-taskModel.belongsTo(usersModel, {foreignKey: "user_id", as: "oneUser"});
+taskModel.belongsTo(usersModel, 
+    {foreignKey: "user_id", as: "oneUser"});
 
