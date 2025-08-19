@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import { createProfesor, getAllProfesor } from "../controllers/profesores.controller.js";
 
 export const routerProfesores = express.Router();
