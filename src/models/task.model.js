@@ -5,4 +5,7 @@ export const taskModel = sequelize.define("task", {
     title: { type: DataTypes.STRING(100), allowNull: false, unique: true },
     description: { type: DataTypes.STRING(100), allowNull: false },
     isComplete: { type: DataTypes.BOOLEAN, defaultValue: false },
+
+} ,{
+    timestamps: false
 });

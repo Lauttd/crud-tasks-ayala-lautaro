@@ -4,7 +4,7 @@ import { createTask, deleteTask, getAllTask, getByIdTask, updateTask } from "../
 export const routerTask = express.Router();
 
 routerTask.post ("/api/tasks", createTask);
-routerTask.get ("/api/tasks", deleteTask);
-routerTask.get ("/api/tasks/:id", getAllTask);
-routerTask.put ("/api/tasks/:id", getByIdTask);
-routerTask.delete ("/api/tasks/:id", updateTask);
+routerTask.get ("/api/tasks", getAllTask);
+routerTask.get ("/api/tasks/:id", getByIdTask);
+routerTask.put ("/api/tasks/:id", updateTask);
+routerTask.delete ("/api/tasks/:id", deleteTask);
