@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/", routerTask);
 app.use("/", routerUsers);
 app.use("/", routerAlumno);
-app.use/("/", routerPerfil);
+app.use("/", routerPerfil);
 app.use("/", routerProfesores);
 app.use("/", routerAlumnoProfesor)
 

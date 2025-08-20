@@ -1,3 +1,4 @@
+import { taskModel } from "../models/task.model.js";
 import { usersModel } from "../models/users.model.js";
 
 //Crear User
@@ -55,7 +56,12 @@ export const createUser = async (req, res) => {
 //Obtener user
 export const getAllUser = async (req, res) => {
     try {
-        const obtenerUser = await usersModel.findAll()
+        const obtenerUser = await usersModel.findAll({
+          include: {model: taskModel,
+            as: "manyTasks",
+            attributes: ["title", "description", "isComplete"]
+          }
+        })
         res.json(obtenerUser);
         
     } catch (error) {
@@ -66,7 +72,12 @@ export const getAllUser = async (req, res) => {
 
 export const getByIdUser = async (req, res) => {
     try {
-        const obtenerUserId = await usersModel.findByPk(req.params.id);
+        const obtenerUserId = await usersModel.findByPk(req.params.id, {
+          include: {model: taskModel,
+            as: "manyTask",
+            attributes: ["title", "description", "isComplete"]
+          }
+        });
 
         if (obtenerUserId)
             res.json(obtenerUserId);

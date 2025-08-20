@@ -20,6 +20,8 @@ taskModel.belongsTo(usersModel,
     {foreignKey: "user_id", as: "oneUser"});
 
 
-perfilModel.hasOne(usersModel, {foreignKey: "perfil_id", as: "perfil"});
+usersModel.hasOne( perfilModel, {foreignKey: "user_id", as: "perfil" })
 
-usersModel.hasOne(perfilModel, {foreignKey: "user_id", as: "user"});
+perfilModel.belongsTo( usersModel, {foreignKey: "user_id", as: "perfil" })
+
+

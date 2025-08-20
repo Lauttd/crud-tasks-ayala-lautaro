@@ -4,7 +4,7 @@ import { usersModel } from "../models/users.model.js";
 
 export const createPerfil = async (req, res) => {
     try {
-        const { nombre, correo, genero, pais, edad } = req.body
+        const { nombre, correo, genero, pais, edad, user_id } = req.body
 
 
         //verificar perfil
@@ -49,18 +49,23 @@ export const createPerfil = async (req, res) => {
             return res.status(400).json({ message: "La edad no debe estar vacio"});
         }
 
+        if (typeof user_id !== "number") {
+            return res.status(400).json({ message: "La id debe ser un numero"});
+        }
+
         //creamos el perfil
         const crearPerfil = await perfilModel.create({
             nombre,
             correo,
-            genero,
             pais,
-            edad
+            genero,
+            edad,
+            user_id
         });
         return res.status(201).json(crearPerfil);
 
     } catch (error) {
-        console.log("No se pudo crear perfil", error);
+        console.log(error);
             return res.status(404).json({ message: "Error por parte del servdior", error });
     }
 };
