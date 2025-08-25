@@ -1,3 +1,4 @@
+import { perfilModel } from "../models/perfil.model.js";
 import { taskModel } from "../models/task.model.js";
 import { usersModel } from "../models/users.model.js";
 
@@ -109,10 +110,12 @@ export const deleteUser = async (req, res) => {
         const borrarUser = await usersModel.destroy({
             where: { id: req.params.id}
         });
-        if (borrarUser) res.json({message: "se elimino el usuario"});
-        else res.status(400).json({message: "no se pudo eliminar el usuario"});
+        if (borrarUser){
+           res.status(204).json({message: "se elimino el usuario"})
+        }
+        else res.status(404).json({message: "no se pudo eliminar el usuario"});
     } catch (error) {
-        res.status(404).json({message: "Error por parte del servidor"});
+        res.status(500).json({message: "Error por parte del servidor"});
     }
 };
 

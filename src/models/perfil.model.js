@@ -10,6 +10,8 @@ export const perfilModel = sequelize.define("perfil", {
     edad: { type: DataTypes.INTEGER, allowNull: false},
     user_id: { type: DataTypes.INTEGER, allowNull: false }
 } ,{
-    timestamps: false
+    paranoid: true,
+    createdAt: false,
+    updatedAt: false,
 });
 
