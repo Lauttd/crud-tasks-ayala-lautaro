@@ -40,10 +40,13 @@ export const createAlumnoProfesor = async (req, res) => {
 //obtener
 export const getAllAlumnoProfesor = async (req, res) => {
     try {
-        const obtener = await AlumnoModel.findAll({
-            include: { model: ProfesorModel,
+        const obtener = await AlumnoProfesorModel.findAll({
+            include: [ { model: ProfesorModel,
                 as: "profesor",
-             }
+             }, {
+                model: AlumnoModel,
+                as: "alumno"
+             } ]
         });
         return res.status(201).json(obtener);
 
