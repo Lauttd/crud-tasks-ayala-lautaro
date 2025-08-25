@@ -59,7 +59,7 @@ export const getAllUser = async (req, res) => {
         const obtenerUser = await usersModel.findAll({
           include: {model: taskModel,
             as: "manyTasks",
-            attributes: ["title", "description", "isComplete"]
+            attributes: ["name", "email", "password"]
           }
         })
         res.json(obtenerUser);
@@ -73,18 +73,21 @@ export const getAllUser = async (req, res) => {
 export const getByIdUser = async (req, res) => {
     try {
         const obtenerUserId = await usersModel.findByPk(req.params.id, {
+          attributes: [ "name", "email" ],
           include: {model: taskModel,
-            as: "manyTask",
-            attributes: ["title", "description", "isComplete"]
+            as: "manyTasks",
+            attributes: {exclude: ["user_id"]}
           }
         });
 
-        if (obtenerUserId)
-            res.json(obtenerUserId);
+        if (obtenerUserId){
+          res.json(obtenerUserId);
+
+        }
         else return res.status(400).json({ message: 'no se puudo obtener los usuarios por id' });
     } catch (error) {
-        console.log('Error al obtener los usuarios por id');
-        return res.status(404).json({ message: 'Error por parte del servidor' });
+        console.log('Error al obtener los usuarios por id', error);
+        return res.status(404).json({ message: 'Error por parte del servidor', error});
     };
 };
 
