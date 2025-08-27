@@ -9,6 +9,8 @@ export const perfilModel = sequelize.define("perfil", {
     genero: { type: DataTypes.STRING(100), allowNull: false},
     edad: { type: DataTypes.INTEGER, allowNull: false }
 } ,{
-    timestamps: false
+    paranoid: true,
+    createdAt: false,
+    updatedAt: false,
 });
 

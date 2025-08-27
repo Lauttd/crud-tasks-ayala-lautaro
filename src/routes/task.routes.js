@@ -1,10 +1,10 @@
 import express from "express";
 import { createTask, deleteTask, getAllTask, getByIdTask, updateTask } from "../controllers/task.controller.js";
-
+import validarParam from "../middlewares/validarParams.js";
 export const routerTask = express.Router();
 
 routerTask.post ("/api/tasks", createTask);
 routerTask.get ("/api/tasks", getAllTask);
-routerTask.get ("/api/tasks/:id", getByIdTask);
-routerTask.put ("/api/tasks/:id", updateTask);
-routerTask.delete ("/api/tasks/:id", deleteTask);
+routerTask.get ("/api/tasks/:id",validarParam, getByIdTask);
+routerTask.put ("/api/tasks/:id",validarParam, updateTask);
+routerTask.delete ("/api/tasks/:id",validarParam, deleteTask);

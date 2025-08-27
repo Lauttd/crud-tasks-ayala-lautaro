@@ -85,3 +85,53 @@ export const getAllPerfil = async (req, res) => {
         return res.status(404).json({ message: "Error por parte del servidor", error });
     }
 };
+
+export const getByIdPerfil = async (req, res) => {
+  try {
+    const obtenerPerfilId = await perfilModel.findByPk(req.params.id, {
+      include: usersModel,
+      attributes: ["nombre", "correo", "pais", "genero" ,"edad"],
+      as: "oneUser",
+    });
+
+    if (obtenerPerfilId) res.json(obtenerPerfilId);
+    else
+      return res
+        .status(400)
+        .json({ message: "no se pudo obtener los perfiles por id" });
+  } catch (error) {
+    console.log("Error al obtener los perfiles por id");
+    return res.status(404).json({ message: "Error por parte del servidor" });
+  }
+};
+
+export const updatePerfil = async (req, res) => {
+  try {
+    const [updated] = await perfilModel.update(req.body, {
+      where: { id: req.params.id },
+    });
+
+    if (updated) {
+      const actualizarPerfil = await perfilModel.findByPk(req.params.id);
+      res.json(actualizarPerfil);
+    } else {
+      return res.status(400).json({ message: "no se encontro el perfil" });
+    }
+  } catch (error) {
+    console.log("no se pudo actualizar el perfil");
+    return res.status(404).json({ message: "Error por parte del servidor" });
+  }
+};
+
+export const deletePerfil = async (req, res) => {
+  try {
+    const borrarPerfil = await perfilModel.destroy({
+      where: { id: req.params.id },
+    });
+    if (borrarPerfil) return res.json({ message: "se elimino el perfil" });
+
+    return res.status(400).json({ message: "no se pudo eliminar el perfil" });
+  } catch (error) {
+    res.status(404).json({ message: "Error por parte del servidor" });
+  }
+};

@@ -14,13 +14,13 @@ export const usersModel = sequelize.define("users", {
 
 //relaciones mucho a mucho
 usersModel.hasMany(taskModel, 
-    {foreignKey: "user_id", as: "manyTasks"});
+    {foreignKey: "user_id", as: "manyTasks", onDelete: "CASCADE"});
 
 taskModel.belongsTo(usersModel, 
     {foreignKey: "user_id", as: "oneUser"});
 
 
-usersModel.hasOne( perfilModel, {foreignKey: "user_id", as: "perfil", onDelete: "CASCADE"});
+usersModel.hasOne( perfilModel, {foreignKey: "user_id", as: "perfil" });
 
 perfilModel.belongsTo( usersModel, {foreignKey: "user_id", as: "perfil" });
 

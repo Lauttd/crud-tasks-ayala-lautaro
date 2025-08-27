@@ -74,3 +74,53 @@ export const getAllProfesor = async (req, res) => {
         return res.status(404).json({ message: "Error por parte del servidor" });
     }
 }
+
+export const getByIdProfesor = async (req, res) => {
+  try {
+    const obtenerProfesorId = await perfilModel.findByPk(req.params.id, {
+      include: usersModel,
+      attributes: ["name", "email", "password" ],
+      as: "oneUser",
+    });
+
+    if (obtenerProfesorId) res.json(obtenerProfesorId);
+    else
+      return res
+        .status(400)
+        .json({ message: "no se pudo obtener los profesores por id" });
+  } catch (error) {
+    console.log("Error al obtener los profesores por id");
+    return res.status(404).json({ message: "Error por parte del servidor", error });
+  }
+};
+
+export const updateProfespr = async (req, res) => {
+  try {
+    const [updated] = await ProfesorModel.update(req.body, {
+      where: { id: req.params.id },
+    });
+
+    if (updated) {
+      const actualizarProfesor = await ProfesorModel.findByPk(req.params.id);
+      res.json(actualizarProfesor);
+    } else {
+      return res.status(400).json({ message: "no se encontro el profesor" });
+    }
+  } catch (error) {
+    console.log("no se pudo actualizar el profesor");
+    return res.status(404).json({ message: "Error por parte del servidor", error });
+  }
+};
+
+export const deleteProfesor = async (req, res) => {
+  try {
+    const borrarProfesor = await ProfesorModel.destroy({
+      where: { id: req.params.id },
+    });
+    if (borrarProfesor) return res.json({ message: "se elimino el profesor" });
+
+    return res.status(400).json({ message: "no se pudo eliminar el profesor" });
+  } catch (error) {
+    res.status(404).json({ message: "Error por parte del servidor", error });
+  }
+};
