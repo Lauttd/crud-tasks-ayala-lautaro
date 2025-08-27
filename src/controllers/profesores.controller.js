@@ -2,55 +2,11 @@ import { AlumnoModel } from "../models/alumnos.model.js";
 import { ProfesorModel } from "../models/profesores.model.js";
  
 export const createProfesor = async (req, res) => {
-    try {
-        const { nombre, apellido, carrera, cargaHoraria } = req.body;
+  const datosValidos = matchedData(req);
+  try {
 
-        //validar nombre
-        if (typeof nombre !== "string") {
-            return res.status(400).json({ message: "El nombre tiene q ser una cadena" });
-        }
-
-        if (nombre === "") {
-            return res.status(400).json({ message: "El nombre no puede estar vacio" });
-        }
-
-
-        //validar apellido
-        if (typeof apellido !== "string") {
-            return res.status(400).json({ message: "El apellido tiene q ser una cadena" });
-        }
-
-        if (apellido === "") {
-            return res.status(400).json({ message: "El apellido no puede estar vacio" });
-        }
-
-        //validar materia
-        if (typeof carrera !== "string") {
-            return res.status(400).json({ message: "La carrera tiene q ser una cadena" });
-        }
-
-        if (carrera === "") {
-            return res.status(400).json({ message: "La carrera no puede estar vacio" });
-        }
-
-        //validar cargaHoraria
-        if (typeof cargaHoraria !== "number") {
-            return res.status(400).json({ message: "La carga horaria debe ser un numero" });
-        }
-
-        if (cargaHoraria === "") {
-            return res.status(400).json({ message: "La la carga horaria no puede estar vacio" });
-        }
-        
-
-        //crear Alumno
-        const nuevoProfesor = await ProfesorModel.create({
-            nombre,
-            apellido, 
-            carrera,
-            cargaHoraria
-        });
-        return res.status(201).json(nuevoProfesor);
+    const nuevoProfesor = await ProfesorModel.create(datosValidos);
+    return res.status(201).json(nuevoProfesor);
 
     } catch (error) {
         console.log("No se pudo crear profesor", error);
@@ -94,18 +50,18 @@ export const getByIdProfesor = async (req, res) => {
   }
 };
 
-export const updateProfespr = async (req, res) => {
-  try {
-    const [updated] = await ProfesorModel.update(req.body, {
-      where: { id: req.params.id },
-    });
-
-    if (updated) {
-      const actualizarProfesor = await ProfesorModel.findByPk(req.params.id);
-      res.json(actualizarProfesor);
-    } else {
-      return res.status(400).json({ message: "no se encontro el profesor" });
-    }
+export const updateProfesor = async (req, res) => {
+   
+  const datosValidos = matchedData(req);
+   try {
+     
+     const profesor = await ProfesorModel.findByPk(req.params.id);
+      if(!profesor)
+       return res.status(404).json({ message: "profesor no encontrado"})
+ 
+      Object.keys(datosValidos).forEach((campo) => {
+       user[campo]= datosValidos[campo]
+      });
   } catch (error) {
     console.log("no se pudo actualizar el profesor");
     return res.status(404).json({ message: "Error por parte del servidor", error });

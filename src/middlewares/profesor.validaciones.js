@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const validacionesAlumno = [
+export const validacionesProfesor = [
     body("nombre")
     .isString().withMessage("El nombre debe ser un string")
     .trim()
@@ -20,11 +20,11 @@ export const validacionesAlumno = [
     .isLength({ max: 100 }).withMessage("La carrera no puede tener mas de 100 caracteres"),
 
 
-    body("edad")
+    body("cargaHoraria")
     .isInt().withMessage("La edad debe ser entero")
 ]
 
-export const validacionesAlumnoUpdate = [
+export const validacionesProfesorUpdate = [
     body("nombre")
     .isString().withMessage("El nombre debe ser un string")
     .trim()
@@ -44,6 +44,6 @@ export const validacionesAlumnoUpdate = [
     .isLength({ max: 100 }).withMessage("La carrera no puede tener mas de 100 caracteres"),
 
 
-    body("edad")
+    body("cargaHoraria")
     .isInt().withMessage("La edad debe ser entero")
 ]
