@@ -1,52 +1,15 @@
-import { perfilModel } from "../models/perfil.model.js";
+import { matchedData } from "express-validator";
 import { taskModel } from "../models/task.model.js";
 import { usersModel } from "../models/users.model.js";
 
 //Crear User
 export const createUser = async (req, res) => {
+    const datosValidos = matchedData(req)
+
   try {
-    const { name, email, password } = req.body;
 
-    // Validar name
-    if (typeof name !== "string") {
-      return res.status(400).json({ message: "name tiene que ser una cadena" });
-    }
-    if (name.length > 100) {
-      return res.status(400).json({ message: "name no puede ser mayor a 100 caracteres" });
-    }
-    if (name.trim() === "") {
-      return res.status(400).json({ message: "name no puede estar vacío" });
-    }
-
-    // Validar email
-    if (typeof email !== "string") {
-      return res.status(400).json({ message: "email tiene que ser una cadena" });
-    }
-    if (email.length > 100) {
-      return res.status(400).json({ message: "email no puede ser mayor a 100 caracteres" });
-    }
-    if (email.trim() === "") {
-      return res.status(400).json({ message: "email no puede estar vacío" });
-    }
-
-    const emailExist = await usersModel.findOne({ where: { email } });
-    if (emailExist) {
-      return res.status(400).json({ message: "el email ya existe" });
-    }
-
-    // Validar password
-    if (typeof password !== "string") {
-      return res.status(400).json({ message: "password tiene que ser una cadena" });
-    }
-    if (password.length > 100) {
-      return res.status(400).json({ message: "password no puede ser mayor a 100 caracteres" });
-    }
-    if (password.trim() === "") {
-      return res.status(400).json({ message: "password no puede estar vacío" });
-    }
-
-    const nuevoUser = await usersModel.create({ name, email, password });
-    return res.status(201).json(nuevoUser);
+    const user = await usersModel.create( datosValidos );
+    return res.status(201).json(user);
 
   } catch (error) {
     console.log('no se pudo crear el usuario', error);
@@ -93,15 +56,23 @@ export const getByIdUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    try {
-        const [updated] = await usersModel.update(req.body, { where: { id: req.params.id }});
+    
+  const datosValidos = matchedData(req)
+  try {
         
-        if(updated) {
-            const actualizarUser = await usersModel.findByPk(req.params.id);
-            res.json(actualizarUser);
-        } else {
-            return res.status(400).json({ message: 'no se encontro el usuario'});
-        }
+      const user = await usersModel.findByPk(req.params.id);
+      if(!user)
+        return res.status(404).json({Message: "User no encontrado"})
+
+      //Actualizar solo los campos que se pasen en la request
+      Object.keys(datosValidos)
+      .forEach((campo)=>{
+        user[campo] = datosValidos[campo]
+      })
+
+      await user.save()
+      res.status(200).json({Message: "Se actualizo el user."})
+        
     } catch (error) {
         console.log('no se pudo actualizar el usuario');
         return res.status(404).json({ message: 'Error por parte del servidor' });
@@ -113,12 +84,10 @@ export const deleteUser = async (req, res) => {
         const borrarUser = await usersModel.destroy({
             where: { id: req.params.id}
         });
-        if (borrarUser){
-           res.status(204).json({message: "se elimino el usuario"})
-        }
-        else res.status(404).json({message: "no se pudo eliminar el usuario"});
+        if (borrarUser) res.json({message: "se elimino el usuario"});
+        else res.status(400).json({message: "no se pudo eliminar el usuario"});
     } catch (error) {
-        res.status(500).json({message: "Error por parte del servidor"});
+        res.status(404).json({message: "Error por parte del servidor"});
     }
 };
 

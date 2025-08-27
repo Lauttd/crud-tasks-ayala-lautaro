@@ -1,68 +1,12 @@
+import { matchedData } from "express-validator";
 import { taskModel } from "../models/task.model.js";
 import { usersModel } from "../models/users.model.js";
 
 //Crear User
 export const createTask = async (req, res) => {
+  
+  const datosValidos = matchedData(req);
   try {
-    const { title, description, isComplete, user_id } = req.body;
-
-    //Validar name
-    if (typeof title !== "string") {
-      return res
-        .status(400)
-        .json({ message: "titulo tiene que ser una cadena" });
-    }
-
-    if (title.length > 100) {
-      return res
-        .status(400)
-        .json({ message: "el titulo no puede ser mayor a 100 caracteres" });
-    }
-
-    if (title === "") {
-      return res
-        .status(400)
-        .json({ message: "el titulo no puede estar vacio" });
-    }
-
-    //Validar que titulo sea unico
-    const titleExist = await taskModel.findOne({ where: { title } });
-
-    if (titleExist) {
-      return res.status(400).json({ message: "el titulo ya existe" });
-    }
-
-    //Validar description
-    if (typeof description !== "string") {
-      return res
-        .status(400)
-        .json({ message: "description tiene que ser una cadena" });
-    }
-
-    if (description.length > 100) {
-      return res
-        .status(400)
-        .json({
-          message: "la descriocion no puede ser mayor a 100 caracteres",
-        });
-    }
-
-    if (description === "") {
-      return res
-        .status(400)
-        .json({ message: "la descripcion no puede estar vacio" });
-    }
-
-    if (typeof isComplete !== "boolean") {
-      return res.status(400).json({ message: "debe ser booleano" });
-    }
-
-    const existeUsurio = await usersModel.findByPk(req.body.user_id);
-    if (!existeUsurio) {
-      return res
-        .status(400)
-        .json({ message: "Se necesita un usuario para crear tareas" });
-    }
 
     const nuevoTask = await taskModel.create({
       title,
@@ -71,6 +15,7 @@ export const createTask = async (req, res) => {
       user_id,
     });
     return res.status(201).json(nuevoTask);
+
   } catch (error) {
     console.log("error al crear la tarea");
     return res.status(404).json({ message: "Error por parte del servidor" });
