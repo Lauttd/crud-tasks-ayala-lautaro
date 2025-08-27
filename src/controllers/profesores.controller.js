@@ -1,6 +1,8 @@
 import { AlumnoModel } from "../models/alumnos.model.js";
 import { ProfesorModel } from "../models/profesores.model.js";
- 
+import { matchedData } from "express-validator";
+
+
 export const createProfesor = async (req, res) => {
   const datosValidos = matchedData(req);
   try {

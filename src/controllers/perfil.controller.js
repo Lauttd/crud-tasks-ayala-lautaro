@@ -1,5 +1,5 @@
 import { perfilModel } from "../models/perfil.model.js";
-import { usersModel } from "../models/users.model.js";
+import { matchedData } from "express-validator";
 
 
 export const createPerfil = async (req, res) => {
@@ -8,7 +8,7 @@ export const createPerfil = async (req, res) => {
 
     const nuevoPerfil = await perfilModel.create(datosValidos);
     return res.status(201).json(nuevoPerfil);
-    
+
     } catch (error) {
         console.log(error);
             return res.status(404).json({ message: "Error por parte del servdior", error });

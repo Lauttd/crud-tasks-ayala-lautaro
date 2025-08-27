@@ -1,7 +1,7 @@
 import { body } from "express-validator";
-import { usersModel } from "../models/users.model.js";
-import { Op } from "sequelize";
 import { taskModel } from "../models/task.model.js";
+import { Op } from "sequelize";
+import { usersModel } from "../models/users.model.js";
 
 export const validacionesTask = [
     body("title")
@@ -9,20 +9,19 @@ export const validacionesTask = [
     .trim()
     .notEmpty().withMessage("El titulo no debe estar vacio")
     .isLength({ max: 100 }).withMessage("El nombre no puede tener mas de 100 caracteres")
-    .custom(async (title, {req})=>{
-        const {id} = req.body
-        const titleExist = await taskModel.findOne({ where: { title }, id: {[Op.ne]: id} });
-            if (title) 
+    .custom(async (title)=>{
+        const titleExist = await taskModel.findOne({ where: { title }});
+            if (titleExist) 
              throw new Error("El titulo ya existe")
             
             return true 
         }),
 
     body("description")
-    .isBoolean().withMessage("La descripcion debe ser un boolean")
+    .isString().withMessage("La descripcion debe ser un string")
     .trim()
-    .notEmpty().withMessage("El email no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El email no puede tener mas de 100 caracteres"),
+    .notEmpty().withMessage("La descripcion no debe estar vacio")
+    .isLength({ max: 100 }).withMessage("La descripcion no puede tener mas de 100 caracteres"),
 
     body("isComplete")
     .isBoolean().withMessage("Debe ser boolean")
@@ -32,11 +31,12 @@ export const validacionesTask = [
     body("user_id")
     .isInt().withMessage("El user_id debe ser entero")
     .custom(async( user_id ) => {
-        const existeUsurio = await usersModel.findByPk(req.body.user_id);
+        const existeUsurio = await usersModel.findByPk(user_id);
     if (!existeUsurio) 
     throw new Error("El usuario no existe")
-    return  true
+    return true
     })
+
 ]
 
 export const validacionesTaskUpdate = [
@@ -44,21 +44,21 @@ export const validacionesTaskUpdate = [
     .isString().withMessage("El titulo debe ser un string")
     .trim()
     .notEmpty().withMessage("El titulo no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El nombre no puede tener mas de 100 caracteres")
+    .isLength({ max: 100 }).withMessage("El titulo no puede tener mas de 100 caracteres")
     .custom(async (title, {req})=>{
         const {id} = req.body
         const titleExist = await taskModel.findOne({ where: { title }, id: {[Op.ne]: id} });
-            if (title) 
+            if (titleExist) 
              throw new Error("El titulo ya existe")
             
             return true 
         }),
 
     body("description")
-    .isBoolean().withMessage("La descripcion debe ser un boolean")
+    .isString().withMessage("La descripcion debe ser un string")
     .trim()
-    .notEmpty().withMessage("El email no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El email no puede tener mas de 100 caracteres"),
+    .notEmpty().withMessage("La descripcion no debe estar vacio")
+    .isLength({ max: 100 }).withMessage("La descripcion no puede tener mas de 100 caracteres"),
 
     body("isComplete")
     .isBoolean().withMessage("Debe ser boolean")
@@ -68,12 +68,9 @@ export const validacionesTaskUpdate = [
     body("user_id")
     .isInt().withMessage("El user_id debe ser entero")
     .custom(async( user_id ) => {
-        const existeUsurio = await usersModel.findByPk(req.body.user_id);
+        const existeUsurio = await usersModel.findByPk(user_id);
     if (!existeUsurio) 
     throw new Error("El usuario no existe")
     return  true
     })
 ]
-
-
-

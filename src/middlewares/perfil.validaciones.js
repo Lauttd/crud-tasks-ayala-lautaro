@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { perfilModel } from "../models/perfil.model.js";
 
 export const validacionesPerfil = [
     body("nombre")
@@ -13,7 +14,7 @@ export const validacionesPerfil = [
     .notEmpty().withMessage("El apellido no debe estar vacio")
     .isLength({ max: 100 }).withMessage("El apellido no puede tener mas de 100 caracteres")
       .custom(async (correo)=>{
-            const correoExist = await usersModel.findOne({ where: { correo } });
+            const correoExist = await perfilModel.findOne({ where: { correo } });
                 if (correoExist) 
                  throw new Error("El correo ya existe")
                 

@@ -1,7 +1,6 @@
 import { matchedData } from "express-validator";
 import { taskModel } from "../models/task.model.js";
 import { usersModel } from "../models/users.model.js";
-
 //Crear User
 export const createUser = async (req, res) => {
     const datosValidos = matchedData(req)
@@ -23,14 +22,14 @@ export const getAllUser = async (req, res) => {
         const obtenerUser = await usersModel.findAll({
           include: {model: taskModel,
             as: "manyTasks",
-            attributes: ["name", "email", "password"]
+            attributes: ["title", "description", "isComplete"]
           }
         })
         res.json(obtenerUser);
         
     } catch (error) {
-        console.log('no se pudo obtener todos los usuarios');
-        return res.status(404).json({ message: 'Error por parte del servidor' });
+        console.log('no se pudo obtener todos los usuarios', error);
+        return res.status(404).json({ message: 'Error por parte del servidor' }, error);
     };
 };
 
