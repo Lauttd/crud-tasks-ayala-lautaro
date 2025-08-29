@@ -14,7 +14,7 @@ export const alumnoProfesorValidacion = [
     .isInt()
     .withMessage("profesor id debe ser entero")
     .custom(async (profesor_id) => {
-      const profesor = await ProfesorModel.findByPk(alumno_id);
+      const profesor = await ProfesorModel.findByPk(profesor_id);
       if (!profesor) throw new Error("Ese profesor no existe");
     }),
 ];

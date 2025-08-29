@@ -42,15 +42,8 @@ export const validacionesUserUpdate = [
     .isString().withMessage("El email debe ser un string")
     .trim()
     .notEmpty().withMessage("El email no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El email no puede tener mas de 100 caracteres")
-    .custom(async (email, {req})=>{
-        const {id} = req.body
-        const emailExist = await usersModel.findOne({ where: { email }, id: {[Op.ne]: id} });
-            if (emailExist) 
-             throw new Error("El email ya existe")
-            
-            return true
-    }),
+    .isLength({ max: 100 }).withMessage("El email no puede tener mas de 100 caracteres"),
+
 
     body("password")
     .optional()

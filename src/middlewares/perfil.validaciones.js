@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { perfilModel } from "../models/perfil.model.js";
+import { usersModel } from "../models/users.model.js"
 
 export const validacionesPerfil = [
     body("nombre")
@@ -8,11 +9,12 @@ export const validacionesPerfil = [
     .notEmpty().withMessage("El nombre no debe estar vacio")
     .isLength({ max: 100 }).withMessage("El nombre no puede tener mas de 100 caracteres"),
 
+
     body("correo")
-    .isString().withMessage("El apellido debe ser un string")
+    .isString().withMessage("El correo debe ser un string")
     .trim()
-    .notEmpty().withMessage("El apellido no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El apellido no puede tener mas de 100 caracteres")
+    .notEmpty().withMessage("El correo no debe estar vacio")
+    .isLength({ max: 100 }).withMessage("El correo no puede tener mas de 200 caracteres")
       .custom(async (correo)=>{
             const correoExist = await perfilModel.findOne({ where: { correo } });
                 if (correoExist) 
@@ -34,6 +36,10 @@ export const validacionesPerfil = [
     body("edad")
     .isInt().withMessage("La edad debe ser un entero")
     .notEmpty().withMessage("El pais no debe estar vacio"),
+
+    body("user_id")
+    .isInt().withMessage("Debe ser un entero")
+    .notEmpty().withMessage("La id no debe estar vacio"),
 ]
 
 export const validacionesPerfilUpdate = [
@@ -44,17 +50,10 @@ export const validacionesPerfilUpdate = [
     .isLength({ max: 100 }).withMessage("El nombre no puede tener mas de 100 caracteres"),
 
     body("correo")
-    .isString().withMessage("El apellido debe ser un string")
+    .isString().withMessage("El correo debe ser un string")
     .trim()
-    .notEmpty().withMessage("El apellido no debe estar vacio")
-    .isLength({ max: 100 }).withMessage("El apellido no puede tener mas de 100 caracteres")
-      .custom(async (correo)=>{
-            const correoExist = await usersModel.findOne({ where: { correo } });
-                if (correoExist) 
-                 throw new Error("El correo ya existe")
-                
-                return true
-        }),
+    .notEmpty().withMessage("El correo no debe estar vacio")
+    .isLength({ max: 100 }).withMessage("El correo no puede tener mas de 200 caracteres"),
 
     body("pais")
     .isString().withMessage("El pais debe ser un string")
@@ -69,4 +68,8 @@ export const validacionesPerfilUpdate = [
     body("edad")
     .isInt().withMessage("La edad debe ser un entero")
     .notEmpty().withMessage("El pais no debe estar vacio"),
+        
+    body("user_id")
+    .isInt().withMessage("Debe ser un entero")
+    .notEmpty().withMessage("La id no debe estar vacio"),
 ]

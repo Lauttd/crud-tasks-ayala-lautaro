@@ -37,9 +37,10 @@ export const getAllAlumno = async (req, res) => {
 export const getByIdAlumno = async (req, res) => {
   try {
     const obtenerAlumnoId = await AlumnoModel.findByPk(req.params.id, {
-      include: ProfesorModel,
-      attributes: [ "nombre", "apellido", "carrera", "cargaHoraria" ],
-      as: "profesor",
+        include: { model: ProfesorModel,
+        as: "profesor",
+        attributes: ["nombre", "apellido", "carrera", "cargaHoraria"],
+        }  
     });
 
     if (obtenerAlumnoId) res.json(obtenerAlumnoId);
@@ -48,7 +49,7 @@ export const getByIdAlumno = async (req, res) => {
         .status(400)
         .json({ message: "no se pudo obtener los alumnos por id" });
   } catch (error) {
-    console.log("Error al obtener los alumnos por id");
+    console.log("Error al obtener los alumnos por id", error);
     return res.status(404).json({ message: "Error por parte del servidor", error });
   }
 };
@@ -58,12 +59,14 @@ export const updateAlumno = async (req, res) => {
 
   try {
     const alumnos = await AlumnoModel.findByPk(req.params.id);
-     if(!taks)
+     if(!alumnos)
       return res.status(404).json({ message: "alumno no encontrado"})
 
      Object.keys(datosValidos).forEach((campo) => {
-      user[campo]= datosValidos[campo]
+      alumnos[campo]= datosValidos[campo]
      });
+
+       res.status(200).json({Message: "Se actualizo el alumno.", alumnos});
 
   } catch (error) {
     console.log("no se pudo actualizar el alumno", error);
@@ -76,7 +79,7 @@ export const deleteAlumno = async (req, res) => {
     const borrarAlumno = await AlumnoModel.destroy({
       where: { id: req.params.id },
     });
-    if (borrarPerfil) return res.json({ message: "se elimino el alumno" });
+    if (borrarAlumno) return res.json({ message: "se elimino el alumno" });
 
     return res.status(400).json({ message: "no se pudo eliminar el alumno" });
   } catch (error) {

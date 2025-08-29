@@ -1,5 +1,6 @@
 import { matchedData } from "express-validator";
 import { taskModel } from "../models/task.model.js";
+import { usersModel } from "../models/users.model.js";
 
 
 //Crear User
@@ -35,10 +36,11 @@ export const getAllTask = async (req, res) => {
 
 export const getByIdTask = async (req, res) => {
   try {
-    const obtenerTaskId = await taskModel.findByPk(req.params.id, {
-      include: usersModel,
-      attributes: ["name", "email"],
-      as: "oneUser",
+    const obtenerTaskId = await taskModel.findAll({
+        include: { model: usersModel,
+        as: "oneUser",
+        attributes: ["name", "email"],
+        }
     });
 
     if (obtenerTaskId) res.json(obtenerTaskId);
@@ -57,17 +59,20 @@ export const updateTask = async (req, res) => {
   const datosValidos = matchedData(req);
   try {
     
-    const taks = await taskModel.findByPk(req.params.id);
-     if(!taks)
+    const task = await taskModel.findByPk(req.params.id);
+     if(!task)
       return res.status(404).json({ message: "Tarea no encontrada"})
 
      Object.keys(datosValidos).forEach((campo) => {
-      user[campo]= datosValidos[campo]
+      task[campo]= datosValidos[campo]
      });
+           await task.save()
+
+      res.status(200).json({Message: "Se actualizo la tarea.", task});
 
   } catch (error) {
     console.log("no se pudo actualizar la tarea");
-    return res.status(404).json({ message: "Error por parte del servidor" });
+    return res.status(404).json({ message: "Error por parte del servidor"});
   }
 };
 

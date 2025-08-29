@@ -6,14 +6,27 @@ import { matchedData } from "express-validator";
 export const createAlumnoProfesor = async (req, res) => {
   const datosValidos = matchedData(req);
   try {
-    //crear Alumno
+    // Verificar si ya existe la relación
+    const existe = await AlumnoProfesorModel.findOne({
+      where: {
+        alumno_id: datosValidos.alumno_id,
+        profesor_id: datosValidos.profesor_id,
+      },
+    });
+    if (existe) {
+      return res
+        .status(400)
+        .json({ message: "La relación alumno-profesor ya existe" });
+    }
+
+    // Crear la relación si no existe
     const alumnoProfesor = await AlumnoProfesorModel.create(datosValidos);
     return res.status(201).json(alumnoProfesor);
   } catch (error) {
     console.log("No se pudo crear Alumno_profesor", error);
     return res
       .status(404)
-      .json({ message: "Error por parte del servdior", error });
+      .json({ message: "Error por parte del servidor", error });
   }
 };
 
@@ -47,11 +60,11 @@ export const getByIdAlumnoProfesor = async (req, res) => {
           attributes: ["nombre", "apellido", "carrera", "cargaHoraria"],
           as: "profesor",
         },
-          {
+        {
           model: AlumnoModel,
           attributes: ["nombre", "apellido", "carrera", "edad"],
           as: "alumno",
-        }
+        },
       ],
     });
 
@@ -73,13 +86,18 @@ export const updateAlumnoPr = async (req, res) => {
 
   try {
     const alumnoProfesor = await alumnoProfesor.findByPk(req.params.id);
-    if (!alumnoProfesor) return res.status(404).json({ message: "alumno y profesor no encontrado" });
+    if (!alumnoProfesor)
+      return res
+        .status(404)
+        .json({ message: "alumno y profesor no encontrado" });
 
     Object.keys(datosValidos).forEach((campo) => {
       alumnoProfesor[campo] = datosValidos[campo];
     });
 
-    return res.status(201).json({message: "se actualizaron los datos"});
+    return res
+      .status(201)
+      .json({ message: "se actualizaron los datos", alumnoProfesor });
   } catch (error) {
     console.log("no se pudo actualizar el alumno y profesor", error);
     return res
@@ -93,9 +111,12 @@ export const deleteAlumnoProfesor = async (req, res) => {
     const borrar = await AlumnoProfesorModel.destroy({
       where: { id: req.params.id },
     });
-    if (borrar) return res.json({ message: "se elimino el alumno y profesor" });
+    if (borrar)
+      return res.json({ message: "se elimino el alumno y profesor" });
 
-    return res.status(400).json({ message: "no se pudo eliminar el alumno y profesor" });
+    return res
+      .status(400)
+      .json({ message: "no se pudo eliminar el alumno y profesor" });
   } catch (error) {
     res.status(404).json({ message: "Error por parte del servidor", error });
   }

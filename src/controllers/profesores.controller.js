@@ -21,33 +21,35 @@ export const getAllProfesor = async (req, res) => {
     try {
         const obtenerProfesor = await ProfesorModel.findAll({
             include: { model: AlumnoModel,
-                as: "profesor",
+                as: "alumno",
                 attribute: ["nombre", "apellido", "carrera", "cargaHoraria"],
              }
         });
         return res.status(201).json(obtenerProfesor);
 
     } catch (error) {
-        console.log("no se pudo obtener todos los profesores");
+        console.log("no se pudo obtener todos los profesores", error);
         return res.status(404).json({ message: "Error por parte del servidor" });
     }
 }
 
 export const getByIdProfesor = async (req, res) => {
   try {
-    const obtenerProfesorId = await perfilModel.findByPk(req.params.id, {
-      include: usersModel,
-      attributes: ["name", "email", "password" ],
-      as: "oneUser",
-    });
+    const obtenerProfesorId = await ProfesorModel.findByPk(req.params.id, {
+        include: { model: AlumnoModel,
+        as: "alumno",
+        attributes: ["nombre", "apellido", "carrera", "edad"],
+        }  
+      });
 
     if (obtenerProfesorId) res.json(obtenerProfesorId);
     else
       return res
         .status(400)
         .json({ message: "no se pudo obtener los profesores por id" });
+
   } catch (error) {
-    console.log("Error al obtener los profesores por id");
+    console.log("Error al obtener los profesores por id", error);
     return res.status(404).json({ message: "Error por parte del servidor", error });
   }
 };
@@ -62,10 +64,12 @@ export const updateProfesor = async (req, res) => {
        return res.status(404).json({ message: "profesor no encontrado"})
  
       Object.keys(datosValidos).forEach((campo) => {
-       user[campo]= datosValidos[campo]
+       profesor[campo]= datosValidos[campo]
       });
+
+        res.status(200).json({Message: "Se actualizo el profesor.", profesor});
   } catch (error) {
-    console.log("no se pudo actualizar el profesor");
+    console.log("no se pudo actualizar el profesor", error);
     return res.status(404).json({ message: "Error por parte del servidor", error });
   }
 };

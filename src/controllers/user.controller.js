@@ -70,7 +70,9 @@ export const updateUser = async (req, res) => {
       })
 
       await user.save()
-      res.status(200).json({Message: "Se actualizo el user."})
+      res.status(200).json({Message: "Se actualizo el user.", user});
+
+
         
     } catch (error) {
         console.log('no se pudo actualizar el usuario');

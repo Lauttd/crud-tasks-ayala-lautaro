@@ -7,7 +7,8 @@ export const perfilModel = sequelize.define("perfil", {
     correo: { type: DataTypes.STRING(100), allowNull: false },
     pais: { type: DataTypes.STRING(100), allowNull: false },
     genero: { type: DataTypes.STRING(100), allowNull: false},
-    edad: { type: DataTypes.INTEGER, allowNull: false }
+    edad: { type: DataTypes.INTEGER, allowNull: false },
+    user_id: { type: DataTypes.INTEGER, allowNull: false }
 } ,{
     paranoid: true,
     createdAt: false,
